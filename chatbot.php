@@ -5,6 +5,7 @@
  * Version: 0.8
  * Author: RECHT Dorian
  * Author URI: https://waverisestudios.com
+ * Plugin URI: https://github.com/WaveriseStudios/ChatbotHelperForWordpress
  */
 
 // Enqueue JS
