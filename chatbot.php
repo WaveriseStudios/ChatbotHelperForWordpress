@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Chatbot WooCommerce
  * Description: Chatbot simple pour WooCommerce avec conseils, ressources et aide.
- * Version: 0.82
+ * Version: 0.83
  * textdomain: chatbot-woocommerce
  * Domain Path: /languages
  * Author: RECHT Dorian
@@ -277,15 +277,34 @@ function chatbot_settings_page_callback() {
     <?php
 }
 
-add_action('template_redirect', 'chatbot_increment_category_views');
-
+// Incrémentation des vues des catégories liées à un article affiché
+add_action('wp', 'chatbot_increment_category_views');
 function chatbot_increment_category_views() {
-    if (is_category() || is_tax('product_cat')) {
-        $term = get_queried_object();
-        if ($term && isset($term->term_id)) {
-            $term_id = $term->term_id;
-            $views = (int) get_term_meta($term_id, 'views', true);
-            update_term_meta($term_id, 'views', $views + 1);
+    if (is_single()) {
+        global $post;
+        $post_id = $post->ID;
+        $cookie_name = 'chatbot_viewed_post_' . $post_id;
+
+        // Évite de compter plusieurs fois la même visite dans 1h
+        if (!isset($_COOKIE[$cookie_name])) {
+            // Catégories blog
+            $categories = get_the_category($post_id);
+            if ($categories) {
+                foreach ($categories as $cat) {
+                    $views = (int) get_term_meta($cat->term_id, 'views', true);
+                    update_term_meta($cat->term_id, 'views', $views + 1);
+                }
+            }
+            // Catégories produit WooCommerce
+            if (taxonomy_exists('product_cat')) {
+                $product_cats = wp_get_post_terms($post_id, 'product_cat');
+                if ($product_cats && !is_wp_error($product_cats)) {
+                    foreach ($product_cats as $pcat) {
+                        $views = (int) get_term_meta($pcat->term_id, 'views', true);
+                        update_term_meta($pcat->term_id, 'views', $views + 1);
+                    }
+                }
+            }
         }
     }
 }
@@ -294,22 +313,25 @@ function chatbot_increment_category_views() {
 add_action('wp_ajax_get_blog_categories', 'chatbot_get_blog_categories');
 add_action('wp_ajax_nopriv_get_blog_categories', 'chatbot_get_blog_categories');
 function chatbot_get_blog_categories() {
-    $cats = get_categories(['hide_empty' => false]);
-    $data = [];
+    $terms = get_terms([
+        'taxonomy' => 'category',
+        'hide_empty' => true,
+        'meta_key' => 'views',
+        'orderby' => 'meta_value_num',
+        'order' => 'DESC',
+        'number' => 5,
+    ]);
 
-    foreach ($cats as $cat) {
-        $views = (int) get_term_meta($cat->term_id, 'views', true);
+    $data = [];
+    foreach ($terms as $term) {
+        $views = get_term_meta($term->term_id, 'views', true);
+        $views = ($views === '') ? 0 : (int) $views;
         $data[] = [
-            'id' => $cat->term_id,
-            'name' => $cat->name,
-            'views' => $views
+            'id' => $term->term_id,
+            'name' => $term->name,
+            'views' => $views,
         ];
     }
-
-    // Trier par nombre de vues descendant
-    usort($data, function ($a, $b) {
-        return $b['views'] - $a['views'];
-    });
 
     wp_send_json(array_slice($data, 0, 5));
 }
@@ -318,7 +340,13 @@ function chatbot_get_blog_categories() {
 add_action('wp_ajax_get_product_categories', 'chatbot_get_product_categories');
 add_action('wp_ajax_nopriv_get_product_categories', 'chatbot_get_product_categories');
 function chatbot_get_product_categories() {
-    $terms = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => false]);
+    $terms = get_terms([
+        'taxonomy' => 'category',
+        'hide_empty' => true,
+        'orderby' => 'meta_value_num',
+        'meta_key' => 'views',
+        'order' => 'DESC',
+    ]);
     $data = [];
 
     if (!empty($terms) && !is_wp_error($terms)) {
