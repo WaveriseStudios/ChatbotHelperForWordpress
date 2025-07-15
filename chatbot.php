@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Chatbot WooCommerce
  * Description: Chatbot simple pour WooCommerce avec conseils, ressources et aide.
- * Version: 0.83
+ * Version: 0.84
  * textdomain: chatbot-woocommerce
  * Domain Path: /languages
  * Author: RECHT Dorian
@@ -43,12 +43,13 @@ function mon_chatbot_styles() {
     wp_add_inline_style('wp-block-library', '
         .chat-option,
         .category-button,
+        a,
         .satisfaction {
             background: none;
             border: none;
             color: #0073aa;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12px;
             padding: 0;
             margin: 4px 0;
             cursor: pointer;
@@ -57,8 +58,10 @@ function mon_chatbot_styles() {
 
         .chat-option:hover,
         .category-button:hover,
+        a,
         .satisfaction:hover {
             color: #005177;
+            cursor: pointer;
             text-decoration: none;
         }
     ');
@@ -254,7 +257,28 @@ function chatbot_settings_page_callback() {
         echo '<div class="updated"><p>Nombre de vues réinitialisé.</p></div>';
     }
 
-    $current_views = get_option('chatbot_view_count', 0);
+    function chatbot_get_total_views() {
+        $total_views = 0;
+
+        // Regrouper toutes les catégories d’articles
+        $categories = get_categories(['hide_empty' => false]);
+        foreach ($categories as $cat) {
+            $total_views += (int) get_term_meta($cat->term_id, 'views', true);
+        }
+
+        // Regrouper toutes les catégories produits WooCommerce
+        $product_cats = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => false]);
+        if (!is_wp_error($product_cats)) {
+            foreach ($product_cats as $pcat) {
+                $total_views += (int) get_term_meta($pcat->term_id, 'views', true);
+            }
+        }
+
+        return $total_views;
+    }
+
+    $current_views = chatbot_get_total_views();
+
     ?>
     <div class="wrap">
         <h1>Réglages du Chatbot</h1>
@@ -336,16 +360,14 @@ function chatbot_get_blog_categories() {
     wp_send_json(array_slice($data, 0, 5));
 }
 
-// AJAX - Produits WooCommerce
-add_action('wp_ajax_get_product_categories', 'chatbot_get_product_categories');
-add_action('wp_ajax_nopriv_get_product_categories', 'chatbot_get_product_categories');
 function chatbot_get_product_categories() {
     $terms = get_terms([
-        'taxonomy' => 'category',
+        'taxonomy' => 'product_cat', // <-- ici product_cat et non category
         'hide_empty' => true,
         'orderby' => 'meta_value_num',
         'meta_key' => 'views',
         'order' => 'DESC',
+        'number' => 5, // limite aussi la requête côté base
     ]);
     $data = [];
 
@@ -359,16 +381,12 @@ function chatbot_get_product_categories() {
             ];
         }
 
-        // Trier par nombre de vues descendant
-        usort($data, function ($a, $b) {
-            return $b['views'] - $a['views'];
-        });
-
-        wp_send_json(array_slice($data, 0, 5));
+        wp_send_json($data); // on envoie tout car limité à 5 dans get_terms
     } else {
         wp_send_json([]);
     }
 }
+
 
 // AJAX - Articles d’un blog
 add_action('wp_ajax_get_posts_by_category', 'chatbot_get_posts_by_category');
