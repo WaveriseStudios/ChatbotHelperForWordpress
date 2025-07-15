@@ -1,8 +1,8 @@
 # ChatbotHelperForWordpress
-A simple helper bot plugin for wordpress that makes clients find what they want faster.  ####
-Install instructions (requires a businness plan in wordpress): ####
-° Download ZIP  ####
-° Add plugin to wordpress  ####
-° Upload plugin to wordpress  ####
-° Activate plugin to wordpress  ####
-° You are done, enjoy !  ####
+A simple helper bot plugin for wordpress that makes clients find what they want faster.  <br />
+Install instructions (requires a businness plan in wordpress):  <br />
+° Download ZIP  <br />
+° Add plugin to wordpress  <br />
+° Upload plugin to wordpress  <br />
+° Activate plugin to wordpress  <br />
+° You are done, enjoy !  <br />
