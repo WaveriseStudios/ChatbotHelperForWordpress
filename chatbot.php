@@ -2,13 +2,22 @@
 /**
  * Plugin Name: Chatbot WooCommerce
  * Description: Chatbot simple pour WooCommerce avec conseils, ressources et aide.
- * Version: 0.81
+ * Version: 0.82
  * textdomain: chatbot-woocommerce
  * Domain Path: /languages
  * Author: RECHT Dorian
  * Author URI: https://waverisestudios.com
  * Plugin URI: https://github.com/WaveriseStudios/ChatbotHelperForWordpress
  */
+
+// Ajoute un lien "Réglages" dans la page des plugins (à côté du plugin)
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'chatbot_add_settings_link');
+
+function chatbot_add_settings_link($links) {
+    $settings_link = '<a href="' . admin_url('options-general.php?page=chatbot_settings_page') . '">Réglages</a>';
+    array_unshift($links, $settings_link);
+    return $links;
+}
 
 // Enqueue JS
 add_action('wp_enqueue_scripts', 'chatbot_enqueue_scripts');
@@ -239,6 +248,13 @@ add_action('admin_init', 'chatbot_register_settings');
 
 // Affichage de la page de réglages
 function chatbot_settings_page_callback() {
+        // Si le bouton de réinitialisation des vues est cliqué
+    if (isset($_POST['chatbot_reset_views']) && check_admin_referer('chatbot_reset_views_action')) {
+        update_option('chatbot_view_count', 0);
+        echo '<div class="updated"><p>Nombre de vues réinitialisé.</p></div>';
+    }
+
+    $current_views = get_option('chatbot_view_count', 0);
     ?>
     <div class="wrap">
         <h1>Réglages du Chatbot</h1>
@@ -249,21 +265,53 @@ function chatbot_settings_page_callback() {
             submit_button();
             ?>
         </form>
+                <hr>
+        <h2>Statistiques</h2>
+        <p><strong>Nombre de vues actuelles :</strong> <?php echo intval($current_views); ?></p>
+
+        <form method="post" action="">
+            <?php wp_nonce_field('chatbot_reset_views_action'); ?>
+            <input type="submit" name="chatbot_reset_views" class="button button-secondary" value="Réinitialiser les vues" onclick="return confirm('Remettre le compteur de vues à zéro ?');" />
+        </form>
     </div>
     <?php
 }
 
+add_action('template_redirect', 'chatbot_increment_category_views');
 
-// AJAX - Articles du blog
+function chatbot_increment_category_views() {
+    if (is_category() || is_tax('product_cat')) {
+        $term = get_queried_object();
+        if ($term && isset($term->term_id)) {
+            $term_id = $term->term_id;
+            $views = (int) get_term_meta($term_id, 'views', true);
+            update_term_meta($term_id, 'views', $views + 1);
+        }
+    }
+}
+
+
 add_action('wp_ajax_get_blog_categories', 'chatbot_get_blog_categories');
 add_action('wp_ajax_nopriv_get_blog_categories', 'chatbot_get_blog_categories');
 function chatbot_get_blog_categories() {
-    $cats = get_categories();
+    $cats = get_categories(['hide_empty' => false]);
     $data = [];
+
     foreach ($cats as $cat) {
-        $data[] = ['id' => $cat->term_id, 'name' => $cat->name];
+        $views = (int) get_term_meta($cat->term_id, 'views', true);
+        $data[] = [
+            'id' => $cat->term_id,
+            'name' => $cat->name,
+            'views' => $views
+        ];
     }
-    wp_send_json($data);
+
+    // Trier par nombre de vues descendant
+    usort($data, function ($a, $b) {
+        return $b['views'] - $a['views'];
+    });
+
+    wp_send_json(array_slice($data, 0, 5));
 }
 
 // AJAX - Produits WooCommerce
@@ -273,13 +321,25 @@ function chatbot_get_product_categories() {
     $terms = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => false]);
     $data = [];
 
-    if (empty($terms) || is_wp_error($terms)) {
-        return null; // renvoyer null si vide
+    if (!empty($terms) && !is_wp_error($terms)) {
+        foreach ($terms as $term) {
+            $views = (int) get_term_meta($term->term_id, 'views', true);
+            $data[] = [
+                'id' => $term->term_id,
+                'name' => $term->name,
+                'views' => $views
+            ];
+        }
+
+        // Trier par nombre de vues descendant
+        usort($data, function ($a, $b) {
+            return $b['views'] - $a['views'];
+        });
+
+        wp_send_json(array_slice($data, 0, 5));
+    } else {
+        wp_send_json([]);
     }
-    foreach ($terms as $term) {
-        $data[] = ['id' => $term->term_id, 'name' => $term->name];
-    }
-    wp_send_json($data);
 }
 
 // AJAX - Articles d’un blog
@@ -306,4 +366,18 @@ function chatbot_get_products_by_category() {
         $data[] = ['title' => $product->get_name(), 'link' => get_permalink($product->get_id())];
     }
     wp_send_json($data);
+}
+
+
+function chatbot_initialize_views_for_all_terms() {
+    $all_terms = array_merge(
+        get_categories(['hide_empty' => false]),
+        get_terms(['taxonomy' => 'product_cat', 'hide_empty' => false])
+    );
+
+    foreach ($all_terms as $term) {
+        if (get_term_meta($term->term_id, 'views', true) === '') {
+            update_term_meta($term->term_id, 'views', 0);
+        }
+    }
 }
