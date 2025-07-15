@@ -2,7 +2,9 @@
 /**
  * Plugin Name: Chatbot WooCommerce
  * Description: Chatbot simple pour WooCommerce avec conseils, ressources et aide.
- * Version: 0.8
+ * Version: 0.81
+ * textdomain: chatbot-woocommerce
+ * Domain Path: /languages
  * Author: RECHT Dorian
  * Author URI: https://waverisestudios.com
  * Plugin URI: https://github.com/WaveriseStudios/ChatbotHelperForWordpress
@@ -48,7 +50,7 @@ function mon_chatbot_styles() {
         .category-button:hover,
         .satisfaction:hover {
             color: #005177;
-            text-decoration: underline;
+            text-decoration: none;
         }
     ');
 }
