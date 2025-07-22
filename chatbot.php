@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Chatbot WooCommerce
  * Description: Chatbot simple pour WooCommerce avec conseils, ressources et aide.
- * Version: 0.85
+ * Version: 0.84
  * textdomain: chatbot-woocommerce
  * Domain Path: /languages
  * Author: RECHT Dorian
@@ -383,9 +383,9 @@ function chatbot_get_product_categories() {
                 'views' => $views
             ];
         }
+    }
 
     wp_send_json(array_slice($data, 0, 5));
-    }
 }
 
 
