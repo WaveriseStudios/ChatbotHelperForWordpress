@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: Chatbot WooCommerce
+ * Plugin Name: Chatbot Helper for WooCommerce
  * Description: Chatbot simple pour WooCommerce avec conseils, ressources et aide.
- * Version: 0.84
+ * Version: 0.87
  * textdomain: chatbot-woocommerce
  * Domain Path: /languages
  * Author: RECHT Dorian
- * Author URI: https://waverisestudios.com
+ * Author URI: https://www.linkedin.com/in/dorian-recht/
  * Plugin URI: https://github.com/WaveriseStudios/ChatbotHelperForWordpress
  */
 
@@ -33,7 +33,6 @@ function chatbot_enqueue_scripts() {
         'largeur' => get_option('chatbot_largeur', '300px'),
         'longeur' => get_option('chatbot_longueur', '420px'),
         'couleur'=> get_option('chatbot_couleur', '#0073aa'),
-        'image_header' => get_option('chatbot_header', 'https://cdn-icons-png.flaticon.com/512/4712/4712027.png'),
     ]);
 }
 
@@ -58,12 +57,40 @@ function mon_chatbot_styles() {
 
         .chat-option:hover,
         .category-button:hover,
-        a,
+        a:hover,
         .satisfaction:hover {
             color: #005177;
             cursor: pointer;
             text-decoration: none;
         }
+
+        #documentation-popup {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+        }
+
+        #documentation-popup .content {
+            background: white;
+            padding: 20px;
+            max-width: 600px;
+            margin: 50px auto;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        #documentation-popup .content {
+            background: white;
+            padding: 20px;
+            max-width: 600px;
+            margin: 50px auto;
+            border-radius: 8px;
+            position: relative;
+        }
+
     ');
 }
 
@@ -86,6 +113,21 @@ function chatbot_add_button_html() {
         <div class="chatbot-messages" style="padding: 10px; max-height: 330px; overflow-y:auto; display:flex; flex-direction:column;"></div>
         <div id="chatbot-content" style="padding: 0 10px 10px 10px;"></div>
     </div>
+
+    <div id="documentation-popup" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999;">
+        <div style="background: white; padding: 20px; max-width: 600px; margin: 50px auto; border-radius: 8px; position: relative;">
+            <button id="close-doc-popup" style="position: absolute; top: 10px; right: 10px; border: none; background: transparent; font-size: 20px;">&times;</button>
+            <h2>📚 Documentation</h2>
+            <p>Voici tout ce que vous devez savoir :</p>
+            <ul>
+                <li><strong>Guide d’installation :</strong> <a href="#">Lien vers guide</a></li>
+                <li><strong>Tutoriels vidéos :</strong> <a href="#">Voir les vidéos</a></li>
+                <li><strong>Fonctionnalités principales :</strong> Explication détaillée ici.</li>
+                <li>Et plus encore...</li>
+            </ul>
+        </div>
+    </div>
+
     <?php
 }
 
@@ -99,7 +141,6 @@ function chatbot_register_settings() {
     register_setting('chatbot_settings_group', 'chatbot_largeur');
     register_setting('chatbot_settings_group', 'chatbot_longueur');
     register_setting('chatbot_settings_group', 'chatbot_couleur');
-    register_setting('chatbot_settings_group', 'chatbot_header');
 
     // Section Général
     add_settings_section(
@@ -147,14 +188,6 @@ function chatbot_register_settings() {
         'chatbot_couleur',
         'Couleur du chatbot',
         'chatbot_couleur_cb',
-        'chatbot_settings_page',
-        'chatbot_section_personnalisation'
-    );
-
-    add_settings_field(
-        'chatbot_image_header',
-        'Image d\'en-tête du chatbot',
-        'chatbot_image_header_cb',
         'chatbot_settings_page',
         'chatbot_section_personnalisation'
     );
@@ -213,11 +246,6 @@ function chatbot_bot_avatar_cb() {
 function chatbot_couleur_cb() {
     $value = get_option('chatbot_couleur', '#0073aa');
     echo '<input type="color" name="chatbot_couleur" value="' . esc_attr($value) . '" placeholder="Couleur de fond de l\'icône du chatbot" />';
-}
-
-function chatbot_image_header_cb() {
-    $value = get_option('chatbot_image_header', '');
-    echo '<input type="text" name="chatbot_image_header" value="' . esc_attr($value) . '" placeholder="URL de l\'image d\'en-tête" />';
 }
 
 function chatbot_bot_name_cb() {
