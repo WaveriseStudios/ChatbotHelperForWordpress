@@ -71,6 +71,7 @@ jQuery(document).ready(function($) {
             <a href="#" class="chat-option" data-choice="conseils">📘 Je voudrais des conseils</a><br>
             <a href="#" class="chat-option" data-choice="ressources">📦 Je cherche des ressources</a><br>
             <a href="#" class="chat-option" data-choice="aide">❓ J'ai besoin d'aide.</a>
+            <a href="#" class="chat-option" data-choice="documentation">📚 Je voudrais voir la documentation</a>
         `;
         addBotButtons(buttons);
         $input.empty();
@@ -100,7 +101,7 @@ jQuery(document).ready(function($) {
                 blogCategories.forEach(cat => {
                     html += `<a class="category-button" data-type="blog" data-id="${cat.id}">${cat.name}</a><br>`;
                 });
-                addBotButtons("Voici les catégories d'articles les plus populaires :<br>");
+                addBotButtons("Voici les catégories d'articles les plus populaires aujourd'hui :<br>");
                 addBotButtons(html);
                 addBotButtons("Vous pouvez aussi voir plus de catégories d'articles sur notre blog.");
             }
@@ -113,7 +114,7 @@ jQuery(document).ready(function($) {
                 productCategories.forEach(cat => {
                     html += `<a class="category-button" data-type="product" data-id="${cat.id}">${cat.name}</a><br>`;
                 });
-                addBotButtons("Voici les catégories de produits les plus populaires :<br>");
+                addBotButtons("Voici les catégories de produits les plus populaires aujourd'hui :<br>");
                 addBotButtons(html);
                 addBotButtons("Vous pouvez aussi voir plus de catégories de produits dans notre boutique.");
             }
@@ -122,7 +123,12 @@ jQuery(document).ready(function($) {
         } else if (choice === 'aide') {
             addBotMessage(`Pour des réponses à vos questions, je vous conseille de consulter la FAQ : <a href="${chatbotData.faq_url}" target="_blank">${chatbotData.faq_url}</a>`);
             showSatisfactionOptions();
+        } else if (choice === 'documentation') {
+            addBotMessage(`Voici la documentation complète :`);
+            $('#documentation-popup').fadeIn(); // Affiche le popup
+            showSatisfactionOptions();
         }
+
     });
 
     $chatWindow.on('click', '.category-button', function(e) {
@@ -138,7 +144,13 @@ jQuery(document).ready(function($) {
             if (response.length === 0 || response === 'null') {
                 addBotMessage("Désolé mais je n'ai trouvé aucun contenu dans cette catégorie.");
             } else {
-                addBotMessage("Voici ce que j’ai trouvé pour vous :");
+                if (response.length === 1) {
+                    addBotMessage("Voici l'article que j’ai trouvé dans cette catégorie :");
+                }
+                else if (response.length > 1) {
+                    addBotMessage(`J'ai trouvé ${response.length} articles que j’ai trouvés pour vous :`);
+                }
+
                 let html = '';
                 response.forEach(item => {
                     html += `<div style="margin:5px 0;"><a href="${item.link}" target="_blank">${item.title}</a></div>`;
@@ -174,6 +186,11 @@ jQuery(document).ready(function($) {
         addUserMessage("Recommencer 🔁");
         resetChat();
     });
+
+    $('#chatbot-window').on('click', '#close-doc-popup', function() {
+        $('#documentation-popup').fadeOut();
+    });
+
 
     resetChat();
 });
