@@ -25,6 +25,7 @@ jQuery(document).ready(function($) {
         $('#chatbot-avatar').attr('src', chatbotData.bot_avatar);
         $('#chatbot-name').text(chatbotData.bot_name);
         $messages.empty();
+        $chatPopup.fadeOut();
         addBotMessage("Attention, je suis tout nouveau, je peux faire des erreurs !");
         addBotMessage("Bonjour 👋, que puis-je faire pour vous aujourd’hui ?");
         showMainOptions();
