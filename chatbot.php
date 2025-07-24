@@ -119,12 +119,6 @@ function chatbot_add_button_html() {
             <button id="close-doc-popup" style="position: absolute; top: 10px; right: 10px; border: none; background: transparent; font-size: 20px;">&times;</button>
             <h2>📚 Documentation</h2>
             <p>Voici tout ce que vous devez savoir :</p>
-            <ul>
-                <li><strong>Guide d’installation :</strong> <a href="#">Lien vers guide</a></li>
-                <li><strong>Tutoriels vidéos :</strong> <a href="#">Voir les vidéos</a></li>
-                <li><strong>Fonctionnalités principales :</strong> Explication détaillée ici.</li>
-                <li>Et plus encore...</li>
-            </ul>
         </div>
     </div>
 
