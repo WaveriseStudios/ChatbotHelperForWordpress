@@ -128,7 +128,7 @@ function chatbot_register_settings() {
     register_setting('chatbot_settings_group', 'chatbot_largeur');
     register_setting('chatbot_settings_group', 'chatbot_longueur');
     register_setting('chatbot_settings_group', 'chatbot_couleur');
-    register_settings('chatbot_settings_group', 'chatbot_doc_url');
+    register_setting('chatbot_settings_group', 'chatbot_doc_url');
 
     // Section Général
     add_settings_section(
