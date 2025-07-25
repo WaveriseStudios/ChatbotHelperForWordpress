@@ -1,6 +1,5 @@
 jQuery(document).ready(function($) {
     const $chatWindow = $('#chatbot-window');
-    const $chatPopup = $('#documentation-popup');
     const $messages = $('.chatbot-messages');
     const $input = $('#chatbot-content');
     let productCategories = [];
@@ -25,7 +24,6 @@ jQuery(document).ready(function($) {
         $('#chatbot-avatar').attr('src', chatbotData.bot_avatar);
         $('#chatbot-name').text(chatbotData.bot_name);
         $messages.empty();
-        $chatPopup.fadeOut();
         addBotMessage("Attention, je suis tout nouveau, je peux faire des erreurs !");
         addBotMessage("Bonjour 👋, que puis-je faire pour vous aujourd’hui ?");
         showMainOptions();
@@ -126,10 +124,14 @@ jQuery(document).ready(function($) {
             addBotMessage(`Pour des réponses à vos questions, je vous conseille de consulter la FAQ : <a href="${chatbotData.faq_url}" target="_blank">${chatbotData.faq_url}</a>`);
             showSatisfactionOptions();
         } else if (choice === 'documentation') {
-            addBotMessage(`Voici la documentation complète :`);
-            $('#documentation-popup').fadeIn(); // Affiche le popup
+            const pdfUrl = 'https://ton-site.com/wp-content/uploads/chemin-vers-ta-documentation.pdf';
+            addBotMessage(`Voici la documentation complète : <a href="${pdfUrl}" target="_blank">📄 Ouvrir la documentation PDF</a>`);
+
+            // Ouvrir automatiquement le PDF dans un nouvel onglet :
+            window.open(pdfUrl, '_blank');
             showSatisfactionOptions();
         }
+
 
     });
 
@@ -150,7 +152,7 @@ jQuery(document).ready(function($) {
                     addBotMessage("Voici l'article que j’ai trouvé dans cette catégorie :");
                 }
                 else if (response.length > 1) {
-                    addBotMessage(`J'ai trouvé ${response.length} articles que j’ai trouvés pour vous :`);
+                    addBotMessage(`J'ai trouvé ${response.length} articles pour vous :`);
                 }
 
                 let html = '';
@@ -187,10 +189,6 @@ jQuery(document).ready(function($) {
     $chatWindow.on('click', '.restart', function() {
         addUserMessage("Recommencer 🔁");
         resetChat();
-    });
-
-    $chatPopup.on('click', '#close-doc-popup', function() {
-        $chatPopup.fadeOut();
     });
 
 
