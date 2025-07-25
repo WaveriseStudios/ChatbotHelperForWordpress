@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Chatbot Helper for WooCommerce
- * Description: Chatbot simple pour WooCommerce avec conseils, ressources et aide.
- * Version: 0.92
+ * Description: Chatbot simple pour WooCommerce avec conseils, ressources, aide et un petit supplément :).
+ * Version: 0.93
  * Domain Path: /languages
  * Author: RECHT Dorian
  * Author URI: https://www.linkedin.com/in/dorian-recht/
@@ -12,6 +12,7 @@
  * Text Domain: chatbot-helper-woocommerce
  * Requires PHP: 8.2.27
  * Tested up to: 6.8.2
+ * Requires at least: 6.8.2
  */
 
 // Ajoute un lien "Réglages" dans la page des plugins (à côté du plugin)
