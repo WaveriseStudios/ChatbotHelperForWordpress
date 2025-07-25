@@ -24,7 +24,6 @@ jQuery(document).ready(function($) {
         $('#chatbot-avatar').attr('src', chatbotData.bot_avatar);
         $('#chatbot-name').text(chatbotData.bot_name);
         $messages.empty();
-        addBotMessage("Attention, je suis tout nouveau, je peux faire des erreurs !");
         addBotMessage("Bonjour 👋, que puis-je faire pour vous aujourd’hui ?");
         showMainOptions();
     }
@@ -126,9 +125,6 @@ jQuery(document).ready(function($) {
         } else if (choice === 'documentation') {
             const pdfUrl = 'https://ton-site.com/wp-content/uploads/chemin-vers-ta-documentation.pdf';
             addBotMessage(`Voici la documentation complète : <a href="${pdfUrl}" target="_blank">📄 Ouvrir la documentation PDF</a>`);
-
-            // Ouvrir automatiquement le PDF dans un nouvel onglet :
-            window.open(pdfUrl, '_blank');
             showSatisfactionOptions();
         }
 
