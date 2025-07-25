@@ -236,7 +236,38 @@ function chatbot_support_email_cb() {
 
 function chatbot_bot_avatar_cb() {
     $value = get_option('chatbot_bot_avatar', '');
-    echo '<input type="text" name="chatbot_bot_avatar" value="' . esc_attr($value) . '" placeholder="URL de l\'image" />';
+    ?>
+    <div>
+        <img id="chatbot_avatar_preview" src="<?php echo esc_url($value); ?>" style="max-width:100px; display:block; margin-bottom:10px;" />
+        <input type="hidden" id="chatbot_bot_avatar" name="chatbot_bot_avatar" value="<?php echo esc_attr($value); ?>" />
+        <button type="button" class="button" id="upload_chatbot_avatar_button">Choisir une image</button>
+    </div>
+    <script>
+    jQuery(document).ready(function($){
+        $('#upload_chatbot_avatar_button').on('click', function(e) {
+            e.preventDefault();
+            const custom_uploader = wp.media({
+                title: 'Choisir une image',
+                button: {
+                    text: 'Utiliser cette image'
+                },
+                library: {
+                    type: ['image']
+                },
+                multiple: false
+            });
+
+            custom_uploader.on('select', function() {
+                const attachment = custom_uploader.state().get('selection').first().toJSON();
+                $('#chatbot_bot_avatar').val(attachment.url);
+                $('#chatbot_avatar_preview').attr('src', attachment.url);
+            });
+
+            custom_uploader.open();
+        });
+    });
+    </script>
+    <?php
 }
 
 function chatbot_couleur_cb() {
