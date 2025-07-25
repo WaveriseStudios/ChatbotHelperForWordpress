@@ -70,7 +70,7 @@ jQuery(document).ready(function($) {
             <a href="#" class="chat-option" data-choice="conseils">📘 Je voudrais des conseils</a><br>
             <a href="#" class="chat-option" data-choice="ressources">📦 Je cherche des ressources</a><br>
             <a href="#" class="chat-option" data-choice="aide">❓ J'ai besoin d'aide.</a><br>
-            <a href="#" class="chat-option" data-choice="documentation">📚 Je voudrais voir la documentation</a>
+            <a href="#" class="chat-option" data-choice="documentation">📚 Comment ça fonctionne ?</a>
         `;
         addBotButtons(buttons);
         $input.empty();
