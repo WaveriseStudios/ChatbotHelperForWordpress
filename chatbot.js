@@ -69,8 +69,9 @@ jQuery(document).ready(function($) {
         const buttons = `
             <a href="#" class="chat-option" data-choice="conseils">📘 Je voudrais des conseils</a><br>
             <a href="#" class="chat-option" data-choice="ressources">📦 Je cherche des ressources</a><br>
+            <a href="#" class="chat-option" data-choice="lucky">🍀 Je me sens chanceux.se !</a><br>
             <a href="#" class="chat-option" data-choice="aide">❓ J'ai besoin d'aide.</a><br>
-            <a href="#" class="chat-option" data-choice="documentation">📚 Comment ça fonctionne ?</a>
+            <a href="#" class="chat-option" data-choice="documentation">📚 Comment ça fonctionne ?</a><br>
         `;
         addBotButtons(buttons);
         $input.empty();
@@ -126,6 +127,16 @@ jQuery(document).ready(function($) {
             const pdfUrl = chatbotData.doc_url;
             addBotMessage(`Voici la documentation complète : <a href="${pdfUrl}" target="_blank">📄 Ouvrir la documentation PDF</a>`);
             showSatisfactionOptions();
+        } else if (choice === 'lucky') {
+            addBotMessage("Vous avez choisi de vous sentir chanceux.se ! Voici un article aléatoire :");
+            $.post(chatbotData.ajax_url, { action: 'get_random_blog_post' }, function(response) {
+                if (response && response.title && response.link) {
+                    addBotMessage(`<a href="${response.link}" target="_blank">${response.title}</a>`);
+                } else {
+                    addBotMessage("Désolé, je n'ai pas trouvé d'article aléatoire.");
+                }
+                showSatisfactionOptions();
+            });
         }
 
 
