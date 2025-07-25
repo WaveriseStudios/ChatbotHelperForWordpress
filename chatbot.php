@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Chatbot Helper for WooCommerce
  * Description: Chatbot simple pour WooCommerce avec conseils, ressources et aide.
- * Version: 0.87
- * textdomain: chatbot-woocommerce
+ * Version: 0.89
+ * textdomain: chatbot-helper-woocommerce
  * Domain Path: /languages
  * Author: RECHT Dorian
  * Author URI: https://www.linkedin.com/in/dorian-recht/
@@ -33,6 +33,7 @@ function chatbot_enqueue_scripts() {
         'largeur' => get_option('chatbot_largeur', '300px'),
         'longeur' => get_option('chatbot_longueur', '420px'),
         'couleur'=> get_option('chatbot_couleur', '#0073aa'),
+        'doc_url' => 'https://doc.com/documentation.pdf', // URL de la documentation
     ]);
 }
 
@@ -114,14 +115,6 @@ function chatbot_add_button_html() {
         <div id="chatbot-content" style="padding: 0 10px 10px 10px;"></div>
     </div>
 
-    <div id="documentation-popup" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999;">
-        <div style="background: white; padding: 20px; max-width: 600px; margin: 50px auto; border-radius: 8px; position: relative;">
-            <button id="close-doc-popup" style="position: absolute; top: 10px; right: 10px; border: none; background: transparent; font-size: 20px;">&times;</button>
-            <h2>📚 Documentation</h2>
-            <p>Voici tout ce que vous devez savoir :</p>
-        </div>
-    </div>
-
     <?php
 }
 
@@ -135,6 +128,7 @@ function chatbot_register_settings() {
     register_setting('chatbot_settings_group', 'chatbot_largeur');
     register_setting('chatbot_settings_group', 'chatbot_longueur');
     register_setting('chatbot_settings_group', 'chatbot_couleur');
+    register_settings('chatbot_settings_group', 'chatbot_doc_url');
 
     // Section Général
     add_settings_section(
@@ -210,6 +204,14 @@ function chatbot_register_settings() {
         'chatbot_settings_page',
         'chatbot_section_personnalisation'
     );
+
+    add_settings_field(
+        'chatbot_doc_url',
+        'URL de la documentation',
+        'chatbot_doc_url_cb',
+        'chatbot_settings_page',
+        'chatbot_section_general'
+    );
 }
 
 // Callbacks sections
@@ -249,19 +251,24 @@ function chatbot_bot_name_cb() {
 
 function chatbot_largeur_cb() {
     $value = get_option('chatbot_largeur', '');
-    echo '<input type="text" name="chatbot_largeur" value="' . esc_attr($value) . '" />';
+    echo '<input type="text" name="chatbot_largeur" value="' . esc_attr($value) . '" placeholder="400px" />';
 }
 
 function chatbot_longueur_cb() {
     $value = get_option('chatbot_longueur', '');
-    echo '<input type="text" name="chatbot_longueur" value="' . esc_attr($value) . '" />';
+    echo '<input type="text" name="chatbot_longueur" value="' . esc_attr($value) . '" placeholder="300px" />';
+}
+
+function chatbot_doc_url_cb() {
+    $value = get_option('chatbot_doc_url', '');
+    echo '<input type="text" name="chatbot_doc_url" value="' . esc_attr($value) . '" placeholder="URL de la documentation" />';
 }
 
 // Ajouter la page dans le menu admin
 function chatbot_add_admin_menu() {
     add_options_page(
         'Réglages Chatbot',
-        'Chatbot',
+        'Chatbot Helper',
         'manage_options',
         'chatbot_settings_page',
         'chatbot_settings_page_callback'
