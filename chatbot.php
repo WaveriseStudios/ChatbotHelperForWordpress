@@ -33,7 +33,7 @@ function chatbot_enqueue_scripts() {
         'largeur' => get_option('chatbot_largeur', '300px'),
         'longeur' => get_option('chatbot_longueur', '420px'),
         'couleur'=> get_option('chatbot_couleur', '#0073aa'),
-        'doc_url' => 'https://doc.com/documentation.pdf', // URL de la documentation
+        'doc_url' => get_option('chatbot_doc_url', 'https://doc.com/documentation.pdf'), // URL de la documentation
     ]);
 }
 
