@@ -2,12 +2,16 @@
 /**
  * Plugin Name: Chatbot Helper for WooCommerce
  * Description: Chatbot simple pour WooCommerce avec conseils, ressources et aide.
- * Version: 0.89
- * textdomain: chatbot-helper-woocommerce
+ * Version: 0.92
  * Domain Path: /languages
  * Author: RECHT Dorian
  * Author URI: https://www.linkedin.com/in/dorian-recht/
  * Plugin URI: https://github.com/WaveriseStudios/ChatbotHelperForWordpress
+ * License: GPL2
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: chatbot-helper-woocommerce
+ * Requires PHP: 8.2.27
+ * Tested up to: 6.8.2
  */
 
 // Ajoute un lien "Réglages" dans la page des plugins (à côté du plugin)
@@ -479,22 +483,6 @@ function chatbot_get_products_by_category() {
     }
     wp_send_json($data);
 }
-
-add_action('wp_ajax_get_random_blog_post', 'chatbot_get_random_blog_post');
-add_action('wp_ajax_nopriv_get_random_blog_post', 'chatbot_get_random_blog_post');
-
-function get_random_blog_post() {
-    $posts = get_posts(['numberposts' => 1, 'orderby' => 'rand']);
-    if (!empty($posts)) {
-        $post = $posts[0];
-        return [
-            'title' => $post->post_title,
-            'link' => get_permalink($post->ID)
-        ];
-    }
-    return null;
-}
-
 
 function chatbot_initialize_views_for_all_terms() {
     $all_terms = array_merge(
