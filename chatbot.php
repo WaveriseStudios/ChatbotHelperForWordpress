@@ -23,7 +23,6 @@ function chatbot_add_settings_link($links) {
 add_action('wp_enqueue_scripts', 'chatbot_enqueue_scripts');
 function chatbot_enqueue_scripts() {
     wp_enqueue_script('jquery');
-    wp_enqueue_media();
     wp_enqueue_script('wp-chatbot-script', plugin_dir_url(__FILE__) . 'chatbot.js', ['jquery'], null, true);
     wp_localize_script('wp-chatbot-script', 'chatbotData', [
         'ajax_url' => admin_url('admin-ajax.php'),
@@ -306,6 +305,11 @@ function chatbot_add_admin_menu() {
         'chatbot_settings_page_callback'
     );
 }
+
+add_action('admin_enqueue_scripts', function() {
+    wp_enqueue_media();
+    wp_enqueue_script('jquery');
+});
 
 add_action('admin_menu', 'chatbot_add_admin_menu');
 add_action('admin_init', 'chatbot_register_settings');
