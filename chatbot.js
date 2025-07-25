@@ -70,8 +70,8 @@ jQuery(document).ready(function($) {
             <a href="#" class="chat-option" data-choice="conseils">📘 Je voudrais des conseils</a><br>
             <a href="#" class="chat-option" data-choice="ressources">📦 Je cherche des ressources</a><br>
             <a href="#" class="chat-option" data-choice="lucky">🍀 Je me sens chanceux.se !</a><br>
-            <a href="#" class="chat-option" data-choice="aide">❓ J'ai besoin d'aide.</a><br>
             <a href="#" class="chat-option" data-choice="documentation">📚 Comment ça fonctionne ?</a><br>
+            <a href="#" class="chat-option" data-choice="aide">❓ J'ai besoin d'aide.</a><br>
         `;
         addBotButtons(buttons);
         $input.empty();
@@ -129,14 +129,28 @@ jQuery(document).ready(function($) {
             showSatisfactionOptions();
         } else if (choice === 'lucky') {
             addBotMessage("Vous avez choisi de vous sentir chanceux.se ! Voici un article aléatoire :");
-            $.post(chatbotData.ajax_url, { action: 'get_random_blog_post' }, function(response) {
-                if (response && response.title && response.link) {
-                    addBotMessage(`<a href="${response.link}" target="_blank">${response.title}</a>`);
-                } else {
-                    addBotMessage("Désolé, je n'ai pas trouvé d'article aléatoire.");
-                }
-                showSatisfactionOptions();
-            });
+            const r_categorie = blogCategories[Math.floor(Math.random() * blogCategories.length)];
+            const r_article = get_random_article_from_category(r_categorie);
+
+            function get_random_article_from_category(category) {
+                if (!category || !category.id) return null;
+                // Synchronous AJAX is deprecated, but for simplicity in this context:
+                let result = null;
+                $.ajax({
+                    url: chatbotData.ajax_url,
+                    type: 'POST',
+                    data: { action: 'get_posts_by_category', category_id: category.id },
+                    async: false,
+                    success: function(response) {
+                        if (Array.isArray(response) && response.length > 0) {
+                            result = response[Math.floor(Math.random() * response.length)];
+                        }
+                    }
+                });
+                return result;
+            }
+            addBotMessage(`<a href="${r_article.link}" target="_blank">${r_article.title}</a>`);
+            showSatisfactionOptions();
         }
 
 
