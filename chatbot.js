@@ -31,7 +31,7 @@ jQuery(document).ready(function($) {
     function addBotMessage(text) {
         $messages.append(`
             <div style="display: flex; justify-content: flex-start; margin: 5px 0;">
-                <div style="background: #f1f1f1; color: #333; padding: 8px 12px; border-radius: 12px 12px 12px 0; font-size: 13px; max-width: 75%;">
+                <div style="background: #f1f1f1; color: #333; padding: 8px 12px; border-radius: 12px 12px 12px 12px; font-size: 13px; max-width: 75%;">
                     ${text}
                 </div>
             </div>
@@ -41,7 +41,7 @@ jQuery(document).ready(function($) {
     function addUserMessage(text) {
         $messages.append(`
             <div style="display: flex; justify-content: flex-end; margin: 5px 0;">
-                <div style="background: #0073aa; color: white; padding: 8px 12px; border-radius: 12px 12px 0 12px; font-size: 13px; max-width: 75%;">
+                <div style="background: #0073aa; color: white; padding: 8px 12px; border-radius: 12px 12px 12px 12px; font-size: 13px; max-width: 75%;">
                     ${text}
                 </div>
             </div>
