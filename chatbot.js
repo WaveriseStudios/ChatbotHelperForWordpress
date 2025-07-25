@@ -123,7 +123,7 @@ jQuery(document).ready(function($) {
             addBotMessage(`Pour des réponses à vos questions, je vous conseille de consulter la FAQ : <a href="${chatbotData.faq_url}" target="_blank">${chatbotData.faq_url}</a>`);
             showSatisfactionOptions();
         } else if (choice === 'documentation') {
-            const pdfUrl = chatbotData.doc_url || 'https://example.com/documentation.pdf';
+            const pdfUrl = chatbotData.doc_url;
             addBotMessage(`Voici la documentation complète : <a href="${pdfUrl}" target="_blank">📄 Ouvrir la documentation PDF</a>`);
             showSatisfactionOptions();
         }
