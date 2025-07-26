@@ -133,7 +133,7 @@ jQuery(document).ready(function($) {
 
             function get_random_gratuit_product() {
                 // Find the "freebies" category in productCategories
-                const gratuitCategory = productCategories.find(cat => cat.name.toLowerCase() === "gratuits");
+                const gratuitCategory = productCategories.find(cat => cat.slug === "freebies");
                 if (!gratuitCategory || !gratuitCategory.id) return null;
                 let result = null;
                 $.ajax({
