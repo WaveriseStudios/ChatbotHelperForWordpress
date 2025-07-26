@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Chatbot Helper for WooCommerce
  * Description: Chatbot simple pour WooCommerce avec conseils, ressources, aide et un petit supplément :).
- * Version: 0.93
+ * Version: 0.94
  * Domain Path: /languages
  * Author: RECHT Dorian
  * Author URI: https://www.linkedin.com/in/dorian-recht/
