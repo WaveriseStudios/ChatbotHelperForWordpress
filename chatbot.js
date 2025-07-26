@@ -69,7 +69,7 @@ jQuery(document).ready(function($) {
         const buttons = `
             <a href="#" class="chat-option" data-choice="conseils">📘 Je voudrais des conseils</a><br>
             <a href="#" class="chat-option" data-choice="ressources">📦 Je cherche des ressources</a><br>
-            <a href="#" class="chat-option" data-choice="lucky">🍀 Je me sens chanceux.se !</a><br>
+            <a href="#" class="chat-option" data-choice="lucky">🎁 Je voudrais un cadeau !</a><br>
             <a href="#" class="chat-option" data-choice="documentation">📚 Comment ça fonctionne ?</a><br>
             <a href="#" class="chat-option" data-choice="aide">❓ J'ai besoin d'aide.</a><br>
         `;
@@ -128,18 +128,18 @@ jQuery(document).ready(function($) {
             addBotMessage(`Voici la documentation complète : <a href="${pdfUrl}" target="_blank">📄 Ouvrir la documentation PDF</a>`);
             showSatisfactionOptions();
         } else if (choice === 'lucky') {
-            addBotMessage("Vous avez choisi de vous sentir chanceux.se ! Voici un article aléatoire :");
-            const r_categorie = blogCategories[Math.floor(Math.random() * blogCategories.length)];
-            const r_article = get_random_article_from_category(r_categorie);
+            addBotMessage("Vous avez choisi de recevoir un cadeau le voici ! 🎁");
+            const r_article = get_random_gratuit_product();
 
-            function get_random_article_from_category(category) {
-                if (!category || !category.id) return null;
-                // Synchronous AJAX is deprecated, but for simplicity in this context:
+            function get_random_gratuit_product() {
+                // Find the "freebies" category in productCategories
+                const gratuitCategory = productCategories.find(cat => cat.name.toLowerCase() === "freebies");
+                if (!gratuitCategory || !gratuitCategory.id) return null;
                 let result = null;
                 $.ajax({
                     url: chatbotData.ajax_url,
                     type: 'POST',
-                    data: { action: 'get_posts_by_category', category_id: category.id },
+                    data: { action: 'get_products_by_category', category_id: gratuitCategory.id },
                     async: false,
                     success: function(response) {
                         if (Array.isArray(response) && response.length > 0) {
