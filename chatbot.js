@@ -133,7 +133,7 @@ jQuery(document).ready(function($) {
 
             function get_random_gratuit_product() {
                 // Find the "freebies" category in productCategories
-                const gratuitCategory = productCategories.find(cat => cat.name.toLowerCase() === "freebies");
+                const gratuitCategory = productCategories.find(cat => cat.name.toLowerCase() === "gratuits");
                 if (!gratuitCategory || !gratuitCategory.id) return null;
                 let result = null;
                 $.ajax({
@@ -202,6 +202,9 @@ jQuery(document).ready(function($) {
 
         if (answer === 'yes') {
             addBotMessage("Super ! N'hésitez pas à revenir si besoin.");
+            setTimeout(() => {
+                resetChat();
+            }, 1000);
         } else {
             addBotMessage(`Vous pouvez contacter notre support à cette adresse : <a href="mailto:${chatbotData.support_email}">${chatbotData.support_email}</a>`);
         }
