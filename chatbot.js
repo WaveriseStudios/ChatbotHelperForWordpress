@@ -128,29 +128,40 @@ jQuery(document).ready(function($) {
             addBotMessage(`Voici la documentation complète : <a href="${pdfUrl}" target="_blank">📄 Ouvrir la documentation PDF</a>`);
             showSatisfactionOptions();
         } else if (choice === 'lucky') {
-            addBotMessage("Vous avez choisi de recevoir un cadeau le voici ! 🎁");
-            const r_article = get_random_gratuit_product();
 
-            function get_random_gratuit_product() {
-                // Find the "freebies" category in productCategories
-                const gratuitCategory = productCategories.find(cat => cat.slug === "freebies");
-                if (!gratuitCategory || !gratuitCategory.id) return null;
-                let result = null;
-                $.ajax({
-                    url: chatbotData.ajax_url,
-                    type: 'POST',
-                    data: { action: 'get_products_by_category', category_id: gratuitCategory.id },
-                    async: false,
-                    success: function(response) {
-                        if (Array.isArray(response) && response.length > 0) {
-                            result = response[Math.floor(Math.random() * response.length)];
-                        }
+            async function get_random_gratuit_product() {
+                try {
+                    const response = await $.post(chatbotData.ajax_url, {
+                        action: 'get_random_freebie_product'
+                    });
+
+                    if (response.success && response.data) {
+                        return response.data;
+                    } else {
+                        console.warn("Aucun produit 'freebie' trouvé.");
+                        return null;
                     }
-                });
-                return result;
+                } catch (error) {
+                    console.error("Erreur AJAX pour récupérer un produit gratuit :", error);
+                    return null;
+                }
             }
-            addBotMessage(`<a href="${r_article.link}" target="_blank">${r_article.title}</a>`);
-            showSatisfactionOptions();
+
+            async function showFreebieProduct() {
+                addBotMessage("Vous avez choisi de recevoir un cadeau, le voici ! 🎁");
+
+                const r_article = await get_random_gratuit_product();
+
+                if (r_article) {
+                    addBotMessage(`<a href="${r_article.link}" target="_blank">${r_article.title}</a>`);
+                } else {
+                    addBotMessage("Désolé, aucun cadeau disponible pour le moment.");
+                }
+
+                showSatisfactionOptions();
+            }
+
+            showFreebieProduct();
         }
 
 
