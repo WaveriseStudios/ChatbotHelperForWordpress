@@ -458,6 +458,35 @@ function chatbot_get_product_categories() {
     wp_send_json(array_slice($data, 0, 5));
 }
 
+add_action('wp_ajax_get_random_freebie_product', 'chatbot_get_random_freebie_product');
+add_action('wp_ajax_nopriv_get_random_freebie_product', 'chatbot_get_random_freebie_product');
+
+function chatbot_get_random_freebie_product() {
+    // On utilise directement le slug 'freebies'
+    $products = wc_get_products([
+        'category' => ['freebies'],
+        'limit' => -1,
+        'status' => 'publish'
+    ]);
+
+    if (empty($products)) {
+        wp_send_json_error('Aucun produit trouvé dans la catégorie freebies');
+    }
+
+    // Sélection aléatoire
+    $product = $products[array_rand($products)];
+
+    $data = [
+        'id'    => $product->get_id(),
+        'title' => $product->get_name(),
+        'link'  => get_permalink($product->get_id()),
+        'price' => $product->get_price_html(),
+        'image' => wp_get_attachment_image_url($product->get_image_id(), 'medium'),
+    ];
+
+    wp_send_json_success($data);
+}
+
 
 // AJAX - Articles d’un blog
 add_action('wp_ajax_get_posts_by_category', 'chatbot_get_posts_by_category');
