@@ -104,25 +104,27 @@ jQuery(document).ready(function($) {
                     html += `<a class="category-button" data-type="blog" data-id="${cat.id}">${cat.name}</a><br>`;
                 });
                 addBotButtons("Voici les catégories d'articles les plus populaires aujourd'hui :<br>");
-                addBotButtons(html);
+                const $catMsg = $(`
+                    <div style="background: #f1f1f1; padding: 8px 12px; border-radius: 12px 12px 12px 0; font-size: 13px;">
+                        ${html}
+                        ${blogCategories.length > maxToShow ? `<a href="#" class="see-more-categories">Voir plus de catégories...</a><br>` : ''}
+                        Vous pouvez aussi voir plus de catégories d'articles sur notre blog.
+                    </div>
+                `);
+                $messages.append($catMsg);
 
                 if (blogCategories.length > maxToShow) {
-                    addBotButtons(`<a href="#" class="see-more-categories">Voir plus de catégories...</a>`);
-                }
-                addBotButtons("Vous pouvez aussi voir plus de catégories d'articles sur notre blog.");
-
-                // Handler for "see more" button
-                $messages.off('click', '.see-more-categories').on('click', '.see-more-categories', function(e) {
-                    e.preventDefault();
-                    let remainingHtml = '';
-                    const remainingCategories = blogCategories.slice(maxToShow);
-                    remainingCategories.forEach(cat => {
-                        remainingHtml += `<a class="category-button" data-type="blog" data-id="${cat.id}">${cat.name}</a><br>`;
+                    $catMsg.on('click', '.see-more-categories', function(e) {
+                        e.preventDefault();
+                        let remainingHtml = '';
+                        const remainingCategories = blogCategories.slice(maxToShow);
+                        remainingCategories.forEach(cat => {
+                            remainingHtml += `<a class="category-button" data-type="blog" data-id="${cat.id}">${cat.name}</a><br>`;
+                        });
+                        $(this).before(remainingHtml);
+                        $(this).remove();
                     });
-                    // Insert after the first categories
-                    $(this).parent().after(`<div style="background: #f1f1f1; padding: 8px 12px; border-radius: 12px 12px 12px 0; font-size: 13px;">${remainingHtml}</div>`);
-                    $(this).remove(); // Remove the "see more" button after click
-                });
+                }
             }
 
         } else if (choice === 'ressources') {
