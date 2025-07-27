@@ -106,7 +106,9 @@ jQuery(document).ready(function($) {
                 addBotButtons("Voici les catégories d'articles les plus populaires aujourd'hui :<br>");
                 addBotButtons(html);
 
-                addBotButtons(`<a href="#" class="see-more-categories">Voir plus de catégories...</a>`);
+                if (blogCategories.length > maxToShow) {
+                    addBotButtons(`<a href="#" class="see-more-categories">Voir plus de catégories...</a>`);
+                }
                 addBotButtons("Vous pouvez aussi voir plus de catégories d'articles sur notre blog.");
 
                 // Handler for "see more" button
@@ -135,18 +137,21 @@ jQuery(document).ready(function($) {
                 addBotButtons("Voici les catégories de produits les plus populaires aujourd'hui :<br>");
                 addBotButtons(html);
 
-                addBotButtons(`<a href="#" class="see-more-product-categories">Voir plus de catégories...</a>`);
+                if (productCategories.length > maxToShow) {
+                    addBotButtons(`<a href="#" class="see-more-product-categories">Voir plus de catégories...</a>`);
+                }
                 addBotButtons("Vous pouvez aussi voir plus de catégories de produits dans notre boutique.");
 
                 // Handler for "see more" button
                 $messages.off('click', '.see-more-product-categories').on('click', '.see-more-product-categories', function(e) {
                     e.preventDefault();
-                    let allHtml = '';
-                    productCategories.forEach(cat => {
-                        allHtml += `<a class="category-button" data-type="product" data-id="${cat.id}">${cat.name}</a><br>`;
+                    let remainingHtml = '';
+                    const remainingCategories = productCategories.slice(maxToShow);
+                    remainingCategories.forEach(cat => {
+                        remainingHtml += `<a class="category-button" data-type="product" data-id="${cat.id}">${cat.name}</a><br>`;
                     });
-                    addBotButtons("Toutes les catégories de produits :<br>");
-                    addBotButtons(allHtml);
+                    // Insert after the first categories
+                    $(this).parent().after(`<div style="background: #f1f1f1; padding: 8px 12px; border-radius: 12px 12px 12px 0; font-size: 13px;">${remainingHtml}</div>`);
                     $(this).remove(); // Remove the "see more" button after click
                 });
             }
