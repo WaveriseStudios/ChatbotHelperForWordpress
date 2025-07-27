@@ -137,9 +137,7 @@ jQuery(document).ready(function($) {
                 addBotButtons("Voici les catégories de produits les plus populaires aujourd'hui :<br>");
                 addBotButtons(html);
 
-                if (productCategories.length > maxToShow) {
-                    addBotButtons(`<a href="#" class="see-more-product-categories">Voir plus de catégories...</a>`);
-                }
+                addBotButtons(`<a href="#" class="see-more-product-categories">Voir plus de catégories...</a>`);
                 addBotButtons("Vous pouvez aussi voir plus de catégories de produits dans notre boutique.");
 
                 // Handler for "see more" button
