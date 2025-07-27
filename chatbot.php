@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Chatbot Helper for WooCommerce
  * Description: Chatbot simple pour WooCommerce avec conseils, ressources, aide et un petit supplément :).
- * Version: 0.99
+ * Version: 0.999
  * Domain Path: /languages
  * Author: RECHT Dorian
  * Author URI: https://www.linkedin.com/in/dorian-recht/
@@ -49,6 +49,7 @@ function mon_chatbot_styles() {
         .chat-option,
         .category-button,
         a,
+        .see-more-categories,
         .satisfaction {
             background: none;
             border: none;
@@ -64,7 +65,8 @@ function mon_chatbot_styles() {
         .chat-option:hover,
         .category-button:hover,
         a:hover,
-        .satisfaction:hover {
+        .satisfaction:hover,
+        .see-more-categories:hover {
             color: #005177;
             cursor: pointer;
             text-decoration: none;
