@@ -98,12 +98,30 @@ jQuery(document).ready(function($) {
                 addBotMessage("Désolé, aucune catégorie d’article n’est disponible pour le moment.");
             } else {
                 let html = '';
-                blogCategories.forEach(cat => {
+                const maxToShow = 5;
+                const firstCategories = blogCategories.slice(0, maxToShow);
+                firstCategories.forEach(cat => {
                     html += `<a class="category-button" data-type="blog" data-id="${cat.id}">${cat.name}</a><br>`;
                 });
                 addBotButtons("Voici les catégories d'articles les plus populaires aujourd'hui :<br>");
                 addBotButtons(html);
+
+                if (blogCategories.length > maxToShow) {
+                    addBotButtons(`<a href="#" class="see-more-categories">Voir plus de catégories...</a>`);
+                }
                 addBotButtons("Vous pouvez aussi voir plus de catégories d'articles sur notre blog.");
+
+                // Handler for "see more" button
+                $messages.off('click', '.see-more-categories').on('click', '.see-more-categories', function(e) {
+                    e.preventDefault();
+                    let allHtml = '';
+                    blogCategories.forEach(cat => {
+                        allHtml += `<a class="category-button" data-type="blog" data-id="${cat.id}">${cat.name}</a><br>`;
+                    });
+                    addBotButtons("Toutes les catégories d'articles :<br>");
+                    addBotButtons(allHtml);
+                    $(this).remove(); // Remove the "see more" button after click
+                });
             }
 
         } else if (choice === 'ressources') {
@@ -111,12 +129,30 @@ jQuery(document).ready(function($) {
                 addBotMessage("Désolé, aucune catégorie de produit n’est disponible pour le moment.");
             } else {
                 let html = '';
-                productCategories.forEach(cat => {
+                const maxToShow = 5;
+                const firstCategories = productCategories.slice(0, maxToShow);
+                firstCategories.forEach(cat => {
                     html += `<a class="category-button" data-type="product" data-id="${cat.id}">${cat.name}</a><br>`;
                 });
                 addBotButtons("Voici les catégories de produits les plus populaires aujourd'hui :<br>");
                 addBotButtons(html);
+
+                if (productCategories.length > maxToShow) {
+                    addBotButtons(`<a href="#" class="see-more-product-categories">Voir plus de catégories...</a>`);
+                }
                 addBotButtons("Vous pouvez aussi voir plus de catégories de produits dans notre boutique.");
+
+                // Handler for "see more" button
+                $messages.off('click', '.see-more-product-categories').on('click', '.see-more-product-categories', function(e) {
+                    e.preventDefault();
+                    let allHtml = '';
+                    productCategories.forEach(cat => {
+                        allHtml += `<a class="category-button" data-type="product" data-id="${cat.id}">${cat.name}</a><br>`;
+                    });
+                    addBotButtons("Toutes les catégories de produits :<br>");
+                    addBotButtons(allHtml);
+                    $(this).remove(); // Remove the "see more" button after click
+                });
             }
 
 
