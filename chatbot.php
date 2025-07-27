@@ -409,7 +409,7 @@ add_action('wp_ajax_nopriv_get_blog_categories', 'chatbot_get_blog_categories');
 function chatbot_get_blog_categories() {
     $terms = get_terms([
         'taxonomy' => 'category',
-        'hide_empty' => true,
+        'hide_empty' => false,
         'meta_key' => 'views',
         'orderby' => 'meta_value_num',
         'order' => 'DESC',
