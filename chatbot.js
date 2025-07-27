@@ -106,9 +106,7 @@ jQuery(document).ready(function($) {
                 addBotButtons("Voici les catégories d'articles les plus populaires aujourd'hui :<br>");
                 addBotButtons(html);
 
-                if (blogCategories.length > maxToShow) {
-                    addBotButtons(`<a href="#" class="see-more-categories">Voir plus de catégories...</a>`);
-                }
+                addBotButtons(`<a href="#" class="see-more-categories">Voir plus de catégories...</a>`);
                 addBotButtons("Vous pouvez aussi voir plus de catégories d'articles sur notre blog.");
 
                 // Handler for "see more" button
