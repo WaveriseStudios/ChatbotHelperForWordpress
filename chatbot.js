@@ -105,7 +105,7 @@ jQuery(document).ready(function($) {
                 });
                 addBotButtons("Voici les catégories d'articles les plus populaires aujourd'hui :<br>");
                 const $catMsg = $(`
-                    <div>
+                    <div style="background: #f1f1f1; padding: 8px 12px; border-radius: 12px 12px 12px 0; font-size: 13px;">
                         ${html}
                         ${blogCategories.length > maxToShow ? `<a href="#" class="see-more-categories">Voir plus de catégories...</a>` : ''}
                     </div>
@@ -139,7 +139,7 @@ jQuery(document).ready(function($) {
                 });
                 addBotButtons("Voici les catégories de produits les plus populaires aujourd'hui :<br>");
                 const $catMsg = $(`
-                    <div>
+                    <div style="background: #f1f1f1; padding: 8px 12px; border-radius: 12px 12px 12px 0; font-size: 13px;">
                         ${html}
                         ${productCategories.length > maxToShow ? `<a href="#" class="see-more-product-categories">Voir plus de catégories...</a>` : ''}
                     </div>
